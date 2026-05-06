@@ -1,5 +1,7 @@
 <?php
 
+include 'db.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -15,23 +17,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
-    if ($username === "admin" && $password === "12345") {
-        $_SESSION['username'] = "admin";
-        $_SESSION['role'] = "admin";
-        $_SESSION['success'] = "Welcome back, admin!";
+    $stmt = $conn->prepare("SELECT username, password, role FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if ($user && $password === $user['password']) {
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+
         header("Location: index.php");
         exit();
     }
 
-    if ($username === "viewer" && $password === "1111") {
-        $_SESSION['username'] = "viewer";
-        $_SESSION['role'] = "viewer";
-        $_SESSION['success'] = "Welcome, viewer!";
-        header("Location: view_students.php");
-        exit();
-    }
-
-    $error = "Wrong username or password!";
+    $error = "Wrong username or password.";
 }
 ?>
 
@@ -53,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <button onclick="toggleDarkMode()">🌙</button>
         </div>
 
-        <p class="subtitle">Secure Admin Login System</p>
+        <p class="subtitle">Login to your account</p>
 
         <?php if ($error !== ""): ?>
             <div class="error-box"><?php echo htmlspecialchars($error); ?></div>
@@ -66,9 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
 
         <p class="subtitle">
-            Admin: admin / 12345<br>
-            Viewer: viewer / 1111
+            Admin: admin / 12345
         </p>
+
+        <a class="btn btn-light" href="register.php">Create viewer account</a>
 
     </div>
 </div>

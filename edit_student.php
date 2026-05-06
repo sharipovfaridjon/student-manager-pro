@@ -5,7 +5,7 @@ include 'db.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-$stmt = $conn->prepare("SELECT id, name, email FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT id, name, email, phone, course, group_name, status FROM students WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 
@@ -55,8 +55,15 @@ if (!$row) {
                     <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
 
                     <input type="text" name="name" value="<?php echo htmlspecialchars($row['name']); ?>" required minlength="3">
-
                     <input type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required>
+                    <input type="text" name="phone" value="<?php echo htmlspecialchars($row['phone']); ?>" placeholder="Phone number">
+                    <input type="text" name="course" value="<?php echo htmlspecialchars($row['course']); ?>" placeholder="Course">
+                    <input type="text" name="group_name" value="<?php echo htmlspecialchars($row['group_name']); ?>" placeholder="Group">
+
+                    <select name="status" class="input-select">
+                        <option value="Active" <?php if ($row['status'] === "Active") echo "selected"; ?>>Active</option>
+                        <option value="Inactive" <?php if ($row['status'] === "Inactive") echo "selected"; ?>>Inactive</option>
+                    </select>
 
                     <button type="submit">Update</button>
                     <a class="btn btn-light" href="view_students.php">Back</a>

@@ -11,6 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $id = (int)($_POST['id'] ?? 0);
 $name = trim($_POST['name'] ?? '');
 $email = trim($_POST['email'] ?? '');
+$phone = trim($_POST['phone'] ?? '');
+$course = trim($_POST['course'] ?? '');
+$groupName = trim($_POST['group_name'] ?? '');
+$status = trim($_POST['status'] ?? 'Active');
 
 if ($id <= 0) {
     $_SESSION['success'] = "Invalid student ID.";
@@ -30,8 +34,13 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-$stmt = $conn->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
-$stmt->bind_param("ssi", $name, $email, $id);
+$stmt = $conn->prepare("
+    UPDATE students
+    SET name = ?, email = ?, phone = ?, course = ?, group_name = ?, status = ?
+    WHERE id = ?
+");
+
+$stmt->bind_param("ssssssi", $name, $email, $phone, $course, $groupName, $status, $id);
 
 if ($stmt->execute()) {
     $_SESSION['success'] = "Student updated successfully.";

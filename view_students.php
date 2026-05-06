@@ -12,17 +12,17 @@ if (isset($_GET['search'])) {
     $search = trim($_GET['search']);
     $searchValue = "%" . $search . "%";
 
-    $countStmt = $conn->prepare("SELECT COUNT(*) AS total FROM users WHERE name LIKE ? OR email LIKE ?");
-    $countStmt->bind_param("ss", $searchValue, $searchValue);
+    $countStmt = $conn->prepare("SELECT COUNT(*) AS total FROM students WHERE name LIKE ? OR email LIKE ? OR phone LIKE ? OR course LIKE ? OR group_name LIKE ?");
+    $countStmt->bind_param("sssss", $searchValue, $searchValue, $searchValue, $searchValue, $searchValue);
     $countStmt->execute();
     $totalRows = (int)$countStmt->get_result()->fetch_assoc()['total'];
 
-    $stmt = $conn->prepare("SELECT id, name, email FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY id DESC LIMIT ?, ?");
-    $stmt->bind_param("ssii", $searchValue, $searchValue, $start, $limit);
+    $stmt = $conn->prepare("SELECT id, name, email, phone, course, group_name, status FROM students WHERE name LIKE ? OR email LIKE ? OR phone LIKE ? OR course LIKE ? OR group_name LIKE ? ORDER BY id DESC LIMIT ?, ?");
+    $stmt->bind_param("sssssii", $searchValue, $searchValue, $searchValue, $searchValue, $searchValue, $start, $limit);
 } else {
-    $totalRows = (int)$conn->query("SELECT COUNT(*) AS total FROM users")->fetch_assoc()['total'];
+    $totalRows = (int)$conn->query("SELECT COUNT(*) AS total FROM students")->fetch_assoc()['total'];
 
-    $stmt = $conn->prepare("SELECT id, name, email FROM users ORDER BY id DESC LIMIT ?, ?");
+    $stmt = $conn->prepare("SELECT id, name, email, phone, course, group_name, status FROM students ORDER BY id DESC LIMIT ?, ?");
     $stmt->bind_param("ii", $start, $limit);
 }
 
@@ -80,7 +80,7 @@ $totalPages = max(1, ceil($totalRows / $limit));
                     <input
                         type="text"
                         name="search"
-                        placeholder="Search by name or email"
+                        placeholder="Search by name, email, phone, course or group"
                         value="<?php echo htmlspecialchars($search); ?>"
                     >
                     <button type="submit">Search</button>
@@ -93,6 +93,10 @@ $totalPages = max(1, ceil($totalRows / $limit));
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Phone</th>
+                    <th>Course</th>
+                    <th>Group</th>
+                    <th>Status</th>
                     <?php if ($_SESSION['role'] === "admin"): ?>
                         <th>Action</th>
                     <?php endif; ?>
@@ -103,6 +107,10 @@ $totalPages = max(1, ceil($totalRows / $limit));
                         <td><?php echo $row['id']; ?></td>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
                         <td><?php echo htmlspecialchars($row['email']); ?></td>
+                        <td><?php echo htmlspecialchars($row['phone']); ?></td>
+                        <td><?php echo htmlspecialchars($row['course']); ?></td>
+                        <td><?php echo htmlspecialchars($row['group_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['status']); ?></td>
 
                         <?php if ($_SESSION['role'] === "admin"): ?>
                             <td>

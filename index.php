@@ -3,10 +3,10 @@
 include 'auth.php';
 include 'db.php';
 
-$totalResult = $conn->query("SELECT COUNT(*) AS total FROM users");
+$totalResult = $conn->query("SELECT COUNT(*) AS total FROM students");
 $totalStudents = (int)$totalResult->fetch_assoc()['total'];
 
-$recent = $conn->query("SELECT id, name, email FROM users ORDER BY id DESC LIMIT 3");
+$recent = $conn->query("SELECT id, name, email, phone, course, group_name, status FROM students ORDER BY id DESC LIMIT 3");
 
 ?>
 <!DOCTYPE html>
@@ -14,7 +14,6 @@ $recent = $conn->query("SELECT id, name, email FROM users ORDER BY id DESC LIMIT
 <head>
     <title>Student Manager Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -56,6 +55,13 @@ $recent = $conn->query("SELECT id, name, email FROM users ORDER BY id DESC LIMIT
                         <form id="addForm" method="POST" action="add_student.php" autocomplete="off">
                             <input type="text" name="name" placeholder="Student name" required minlength="3">
                             <input type="email" name="email" placeholder="Student email" required>
+                            <input type="text" name="phone" placeholder="Phone number">
+                            <input type="text" name="course" placeholder="Course">
+                            <input type="text" name="group_name" placeholder="Group">
+                            <select name="status" class="input-select">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
                             <button type="submit">Add Student</button>
                         </form>
                     </div>
@@ -94,6 +100,10 @@ $recent = $conn->query("SELECT id, name, email FROM users ORDER BY id DESC LIMIT
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Phone</th>
+                        <th>Course</th>
+                        <th>Group</th>
+                        <th>Status</th>
                     </tr>
 
                     <?php while ($row = $recent->fetch_assoc()): ?>
@@ -101,6 +111,10 @@ $recent = $conn->query("SELECT id, name, email FROM users ORDER BY id DESC LIMIT
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
+                            <td><?php echo htmlspecialchars($row['phone']); ?></td>
+                            <td><?php echo htmlspecialchars($row['course']); ?></td>
+                            <td><?php echo htmlspecialchars($row['group_name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['status']); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </table>

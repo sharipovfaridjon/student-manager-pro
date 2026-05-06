@@ -340,3 +340,18 @@ html.dark-mode .btn-light {
     .sidebar { width: 100%; }
     .card-grid { grid-template-columns: 1fr; }
 }
+
+.input-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin: 8px 0 15px;
+    background: white;
+}
+
+html.dark-mode .input-select {
+    background: #020617;
+    color: white;
+    border-color: #334155;
+}

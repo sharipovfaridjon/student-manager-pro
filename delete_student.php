@@ -17,7 +17,7 @@ if ($id <= 0) {
     exit();
 }
 
-$stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+$stmt = $conn->prepare("DELETE FROM students WHERE id = ?");
 $stmt->bind_param("i", $id);
 
 if ($stmt->execute()) {
