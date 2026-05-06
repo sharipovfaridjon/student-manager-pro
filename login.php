@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             Password: 12345
         </p>
 
-        <a class="btn btn-light" href="register.php">Create viewer account</a>
+        <a class="btn btn-light" href="register.php">Create account</a>
 
     </div>
 </div>
