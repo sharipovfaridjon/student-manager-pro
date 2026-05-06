@@ -67,7 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
 
         <p class="subtitle">
-            Admin: admin / 12345
+            Demo Account:<br>
+            Username: admin<br>
+            Password: 12345
         </p>
 
         <a class="btn btn-light" href="register.php">Create viewer account</a>
